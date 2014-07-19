@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap 101 Template</title>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style type="text/css">
+        .glyphicon {
+            font-size: 24px;
+        }
+        .progress {
+            margin-bottom: 0;
+        }
+
+        .y.axisRight text {
+            fill: orange;
+        }
+
+        .y.axisLeft text {
+            fill: steelblue;
+        }
+
+        .axis path,
+        .axis line {
+          fill: none;
+          stroke: #000;
+          shape-rendering: crispEdges;
+        }
+
+        .bar1 {
+          fill: steelblue;
+        }
+
+        .bar2 {
+          fill: orange;
+        }
+
+        .x.axis path {
+          display: none;
+        }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-inverse" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/index.html">Algar-Info</a>
+        </div>
+      </div>
+    </nav>
+    <div class="container" style="margin-top: 60px;">
+        <div class="row">
+            <div class="col-xs-3">
+                <ul class="nav nav-pills nav-stacked">
+                    <li><a href="/index.html">Meus dados</a></li>
+                    <li class="active"><a href="/planos.html">Planos</a></li>
+                    <li><a href="/ideal.html">Plano ideal</a></li>
+                </ul>
+            </div>
+            <div class="col-xs-9">
+                <div class="jumbotron">
+                    <h1>Plano Super</h1>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel leo id erat rhoncus tempor nec nec turpis. Aliquam ut velit mollis, accumsan dui sit amet, commodo enim. Nam iaculis ipsum vel leo vestibulum, ut imperdiet nulla convallis. Aenean eget ornare ipsum, vel aliquam nibh. Aliquam quis ligula at nulla adipiscing pulvinar. In hac habitasse platea dictumst. Nunc adipiscing neque at sodales placerat.</p>
+                </div>
+                <div class="graph">
+                    <div class="legend pull-right">
+                        <span class="label" style="background-color:steelblue;">Plano Atual</span>
+                        <span class="label" style="background-color:orange;">Plano 1</span>
+                    </div>
+                </div>
+                <center><button type="button" class="btn btn-default btn-lg">Mudar de Plano</button></center>
+                <br>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/holder.js"></script>
+    <script src="js/d3.min.js"></script>
+    <script>
+
+    var margin = {top: 80, right: 20, bottom: 80, left: 20},
+        width = $(".graph").width() - margin.left - margin.right,
+        height = 400 - margin.top - margin.bottom;
+
+    var x = d3.scale.ordinal()
+        .rangeRoundBands([0, width], .1);
+
+    var y0 = d3.scale.linear().domain([300, 1100]).range([height, 0]),
+        y1 = d3.scale.linear().domain([20, 80]).range([height, 0]),
+        color = d3.scale.category10();
+
+    var xAxis = d3.svg.axis()
+        .scale(x)
+        .orient("bottom");
+
+    // create left yAxis
+    var yAxisLeft = d3.svg.axis().scale(y0).ticks(4).orient("left");
+    // create right yAxis
+    var yAxisRight = d3.svg.axis().scale(y1).ticks(6).orient("right");
+
+    var svg = d3.select(".graph").append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+        .attr("class", "graph")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    d3.tsv("data.tsv", type, function(error, data) {
+
+
+        x.domain(data.map(function(d) { return d.attr; }));
+        y0.domain([0, d3.max(data, function(d) { return d.atual; })]);
+
+        svg.append("g")
+          .attr("class", "x axis")
+          .attr("transform", "translate(0," + height + ")")
+          .call(xAxis);
+
+        // svg.append("g")
+        //     .attr("class", "y axis axisLeft")
+        //     .attr("transform", "translate(0,0)")
+        //     .call(yAxisLeft)
+        //   .append("text")
+        //     .attr("y", 6)
+        //     .attr("dy", "-2em")
+        //     .style("text-anchor", "end")
+        //     .style("text-anchor", "end")
+        //     .text("Plano Atual");
+
+        // svg.append("g")
+        //     .attr("class", "y axis axisRight")
+        //     .attr("transform", "translate(" + (width) + ",0)")
+        //     .call(yAxisRight)
+        //   .append("text")
+        //     .attr("y", 6)
+        //     .attr("dy", "-2em")
+        //     .attr("dx", "2em")
+        //     .style("text-anchor", "end")
+        //     .text("#");
+
+        bars = svg.selectAll(".bar").data(data).enter();
+
+        bars.append("rect")
+          .attr("class", "bar1")
+          .attr("x", function(d) { return x(d.attr); })
+          .attr("width", x.rangeBand()/2)
+          .attr("y", function(d) { return y0(d.atual); })
+          .attr("height", function(d,i,j) { return height - y0(d.atual); });
+
+        bars.append("rect")
+          .attr("class", "bar2")
+          .attr("x", function(d) { return x(d.attr) + x.rangeBand()/2; })
+          .attr("width", x.rangeBand() / 2)
+          .attr("y", function(d) { return y1(d.planox); })
+          .attr("height", function(d,i,j) { return height - y1(d.planox); });
+    });
+
+    function type(d) {
+      d.atual = +d.atual;
+      return d;
+    }
+
+    </script>
+  </body>
+</html>

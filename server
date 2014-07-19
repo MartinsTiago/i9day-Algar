@@ -1,2 +1,1 @@
-python -m SimpleHTTPServer
-
+pushd www/; python -m SimpleHTTPServer; popd

@@ -1,0 +1,3 @@
+# view AndroidManifest.xml #generated:6
+-keep class br.ufu.i9day.i9Day { <init>(...); }
+
