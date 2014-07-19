@@ -80,6 +80,10 @@
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel leo id erat rhoncus tempor nec nec turpis. Aliquam ut velit mollis, accumsan dui sit amet, commodo enim. Nam iaculis ipsum vel leo vestibulum, ut imperdiet nulla convallis. Aenean eget ornare ipsum, vel aliquam nibh. Aliquam quis ligula at nulla adipiscing pulvinar. In hac habitasse platea dictumst. Nunc adipiscing neque at sodales placerat.</p>
                 </div>
                 <div class="graph">
+                    <div class="legend pull-right">
+                        <span class="label" style="background-color:steelblue;">Plano Atual</span>
+                        <span class="label" style="background-color:orange;">Plano 1</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -94,14 +98,15 @@
     <script>
 
     var margin = {top: 80, right: 20, bottom: 80, left: 20},
-    width = $(".graph").width() - margin.left - margin.right,
-    height = 400 - margin.top - margin.bottom;
+        width = $(".graph").width() - margin.left - margin.right,
+        height = 400 - margin.top - margin.bottom;
 
     var x = d3.scale.ordinal()
         .rangeRoundBands([0, width], .1);
 
     var y0 = d3.scale.linear().domain([300, 1100]).range([height, 0]),
-    y1 = d3.scale.linear().domain([20, 80]).range([height, 0]);
+        y1 = d3.scale.linear().domain([20, 80]).range([height, 0]),
+        color = d3.scale.category10();
 
     var xAxis = d3.svg.axis()
         .scale(x)
@@ -120,56 +125,57 @@
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     d3.tsv("data.tsv", type, function(error, data) {
-      x.domain(data.map(function(d) { return d.year; }));
-      y0.domain([0, d3.max(data, function(d) { return d.money; })]);
 
-      svg.append("g")
+
+        x.domain(data.map(function(d) { return d.attr; }));
+        y0.domain([0, d3.max(data, function(d) { return d.atual; })]);
+
+        svg.append("g")
           .attr("class", "x axis")
           .attr("transform", "translate(0," + height + ")")
           .call(xAxis);
 
-      // svg.append("g")
-      //     .attr("class", "y axis axisLeft")
-      //     .attr("transform", "translate(0,0)")
-      //     .call(yAxisLeft)
-      //   .append("text")
-      //     .attr("y", 6)
-      //     .attr("dy", "-2em")
-      //     .style("text-anchor", "end")
-      //     .style("text-anchor", "end");
-      //     .text("Dollars");
+        // svg.append("g")
+        //     .attr("class", "y axis axisLeft")
+        //     .attr("transform", "translate(0,0)")
+        //     .call(yAxisLeft)
+        //   .append("text")
+        //     .attr("y", 6)
+        //     .attr("dy", "-2em")
+        //     .style("text-anchor", "end")
+        //     .style("text-anchor", "end")
+        //     .text("Plano Atual");
 
-      // svg.append("g")
-      //     .attr("class", "y axis axisRight")
-      //     .attr("transform", "translate(" + (width) + ",0)")
-      //     .call(yAxisRight)
-      //   .append("text")
-      //     .attr("y", 6)
-      //     .attr("dy", "-2em")
-      //     .attr("dx", "2em")
-      //     .style("text-anchor", "end")
-      //     .text("#");
+        // svg.append("g")
+        //     .attr("class", "y axis axisRight")
+        //     .attr("transform", "translate(" + (width) + ",0)")
+        //     .call(yAxisRight)
+        //   .append("text")
+        //     .attr("y", 6)
+        //     .attr("dy", "-2em")
+        //     .attr("dx", "2em")
+        //     .style("text-anchor", "end")
+        //     .text("#");
 
-      bars = svg.selectAll(".bar").data(data).enter();
+        bars = svg.selectAll(".bar").data(data).enter();
 
-      bars.append("rect")
+        bars.append("rect")
           .attr("class", "bar1")
-          .attr("x", function(d) { return x(d.year); })
+          .attr("x", function(d) { return x(d.attr); })
           .attr("width", x.rangeBand()/2)
-          .attr("y", function(d) { return y0(d.money); })
-          .attr("height", function(d,i,j) { return height - y0(d.money); });
+          .attr("y", function(d) { return y0(d.atual); })
+          .attr("height", function(d,i,j) { return height - y0(d.atual); });
 
-      bars.append("rect")
+        bars.append("rect")
           .attr("class", "bar2")
-          .attr("x", function(d) { return x(d.year) + x.rangeBand()/2; })
+          .attr("x", function(d) { return x(d.attr) + x.rangeBand()/2; })
           .attr("width", x.rangeBand() / 2)
-          .attr("y", function(d) { return y1(d.number); })
-          .attr("height", function(d,i,j) { return height - y1(d.number); });
-
+          .attr("y", function(d) { return y1(d.planox); })
+          .attr("height", function(d,i,j) { return height - y1(d.planox); });
     });
 
     function type(d) {
-      d.money = +d.money;
+      d.atual = +d.atual;
       return d;
     }
 
