@@ -1,0 +1,41 @@
+.glyphicon {
+    font-size: 24px;
+}
+.progress {
+    margin-bottom: 0;
+}
+
+.y.axisRight text {
+    fill: orange;
+}
+
+.y.axisLeft text {
+    fill: steelblue;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.bar1 {
+  fill: steelblue;
+}
+
+.bar2 {
+  fill: orange;
+}
+
+.x.axis path {
+  display: none;
+}
+
+.nav > .active {
+    background-color: #428BCA;
+}
+
+.nav > .active a {
+    color: #FFF;
+}
